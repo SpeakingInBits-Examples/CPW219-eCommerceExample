@@ -71,4 +71,17 @@ public class ProductController : Controller
 
         return View(product);
     }
+
+    public IActionResult Delete(int id)
+    {
+        Product? product = _context.Products
+            .Where(p => p.ProductId == id).FirstOrDefault();
+
+        if (product == null)
+        {
+            return NotFound();
+        }
+
+        return View(product);
+    }
 }
