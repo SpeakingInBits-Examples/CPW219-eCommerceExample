@@ -43,11 +43,9 @@ public class ProductController : Controller
     }
 
     [HttpGet]
-    public IActionResult Edit(int id)
+    public async Task<IActionResult> Edit(int id)
     {
-        Product? product = _context.Products
-            .Where(p => p.ProductId == id)
-            .FirstOrDefault();
+        Product? product = await _context.Products.FindAsync(id);
 
         if (product == null)
         {
@@ -70,5 +68,36 @@ public class ProductController : Controller
         }
 
         return View(product);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Delete(int id)
+    {
+        Product? product = await _context.Products.FindAsync(id);
+
+        if (product == null)
+        {
+            return NotFound();
+        }
+
+        return View(product);
+    }
+
+    [ActionName(nameof(Delete))]
+    [HttpPost]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        Product? product = await _context.Products.FindAsync(id);
+
+        if (product == null)
+        {
+            return RedirectToAction(nameof(Index));
+        }
+
+        _context.Remove(product);
+        await _context.SaveChangesAsync();
+
+        TempData["Message"] = $"{product.Title} was successfully deleted";
+        return RedirectToAction(nameof(Index));
     }
 }
