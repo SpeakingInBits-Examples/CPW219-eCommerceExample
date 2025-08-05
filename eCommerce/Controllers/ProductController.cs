@@ -41,4 +41,34 @@ public class ProductController : Controller
         }
         return View(p); // If model state is invalid, return the view with the product data and validation errors
     }
+
+    [HttpGet]
+    public IActionResult Edit(int id)
+    {
+        Product? product = _context.Products
+            .Where(p => p.ProductId == id)
+            .FirstOrDefault();
+
+        if (product == null)
+        {
+            return NotFound();
+        }
+
+        return View(product);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit(Product product)
+    {
+        if (ModelState.IsValid)
+        {
+            _context.Update(product);
+            await _context.SaveChangesAsync();
+
+            TempData["Message"] = $"{product.Title} was updated successfully";
+            return RedirectToAction(nameof(Index));
+        }
+
+        return View(product);
+    }
 }
