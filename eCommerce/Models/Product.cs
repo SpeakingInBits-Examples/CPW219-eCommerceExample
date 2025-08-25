@@ -26,3 +26,17 @@ public class Product
     [DataType(DataType.Currency)]
     public decimal Price { get; set; }
 }
+
+public class ProductListViewModel
+{
+    public required IEnumerable<Product> Products { get; set; }
+    public int CurrentPage { get; set; }
+    public int TotalPages { get; set; }
+    public int PageSize { get; set; }
+    public int TotalItems { get; set; }
+
+    // Search / filter criteria
+    public string? SearchTerm { get; set; }
+    public decimal? MinPrice { get; set; }
+    public decimal? MaxPrice { get; set; }
+}
